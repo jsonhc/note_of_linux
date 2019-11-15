@@ -1,0 +1,30 @@
+ftp自动上传文件脚本:
+#!/bin/bash
+ftp -n<<!
+open 192.168.220.129
+user ls toor
+binary
+hash
+cd /path/to/backup
+lcd /path/to/need/backup
+prompt
+mkdir `date +"%Y%m%d"`
+cd `date +"%Y%m%d"`
+mput *
+close
+bye
+!
+
+open    #打开的ftp的ip
+user    #提供用户和密码
+binary  #使用二进制传输
+prompt  #使用=后边mput上传多个文件时不用每次都输入yes进行确认
+
+使用sftp进行传输
+sftp user@host << EOF
+cd /path/to/backup
+lcd /path/to/backup
+mput *
+bye
+EOF
+
