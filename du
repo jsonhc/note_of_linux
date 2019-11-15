@@ -1,0 +1,23 @@
+查看目录占用大小:
+wadeson@wadeson-Inspiron-7460:/$ sudo du -sh /home
+47G	/home
+
+只查看第一层级别的占用磁盘大小:
+wadeson@wadeson-Inspiron-7460:/$ sudo du --max-depth=1 -h
+870M	./opt
+60K	./root
+140K	./tmp
+802M	./lib
+3.8G	./snap
+4.0K	./mnt
+16K	./lost+found
+13M	./bin
+47G	./home
+
+查找出占用几G大小的文件或目录:
+wadeson@wadeson-Inspiron-7460:~$ du -sh *|grep G
+35G	vmware
+2.0G	下载
+
+显示inode信息:df -i
+显示区块占用情况:df -k
