@@ -1,3 +1,5 @@
 oracle中查询表中先排序再取出前10条数据:
 select * from (select * from tablename order by columnname desc) where rownum<=10;
 
+查看存储过程信息:
+select text from user_source where name='procedure_name';    #procedure_name为存储过程名字,需要全部用大写英文
