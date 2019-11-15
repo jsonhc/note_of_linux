@@ -1,0 +1,35 @@
+gzip压缩:
+gzip压缩文件会将源文件压缩完后同时进行清理:
+wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use 
+-rw-r--r-- 1 wadeson wadeson 15640 11月 15 19:54 cpu_use
+wadeson@wadeson-Inspiron-7460:/tmp$ gzip cpu_use 
+wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use* 
+-rw-r--r-- 1 wadeson wadeson 3195 11月 15 19:54 cpu_use.gz
+
+gzip压缩对应的gunzip解压:
+wadeson@wadeson-Inspiron-7460:/tmp$ gunzip cpu_use.gz 
+wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use* 
+-rw-r--r-- 1 wadeson wadeson 15640 11月 15 19:54 cpu_use
+
+tar压缩与解压:
+wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use* 
+-rw-r--r-- 1 wadeson wadeson 15640 11月 15 19:54 cpu_use
+wadeson@wadeson-Inspiron-7460:/tmp$ tar zcf cpu_use.tar.gz cpu_use 
+wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use* 
+-rw-r--r-- 1 wadeson wadeson 15640 11月 15 19:54 cpu_use
+-rw-r--r-- 1 wadeson wadeson  3321 11月 15 20:11 cpu_use.tar.gz
+
+当使用tar压缩顺便压缩完成后清理源文件使用如下命令:
+wadeson@wadeson-Inspiron-7460:/tmp$ ll tar_help 
+-rw-r--r-- 1 wadeson wadeson 15768 11月 15 20:18 tar_help
+wadeson@wadeson-Inspiron-7460:/tmp$ tar zcf tar_help.tar.gz tar_help --remove-files
+wadeson@wadeson-Inspiron-7460:/tmp$ ll tar_help* 
+-rw-r--r-- 1 wadeson wadeson 5839 11月 15 20:19 tar_help.tar.gz
+
+
+使用tar进行解压:
+wadeson@wadeson-Inspiron-7460:/tmp$ tar xf cpu_use.tar.gz 
+wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use* 
+-rw-r--r-- 1 wadeson wadeson 15640 11月 15 19:54 cpu_use
+-rw-r--r-- 1 wadeson wadeson  3321 11月 15 20:11 cpu_use.tar.gz
+
