@@ -3,7 +3,8 @@ wadeson@wadeson-Inspiron-7460:~$ which logrotate
 /usr/sbin/logrotate
 
 只需要再添加一个配置文件就行,常用配置文件中参数如下:
-rotate 10    #轮替最多保留之前的数据10次
+rotate 10    #切割最多保留10个文件
 compress     #启用压缩,默认使用gzip压缩
 dateext      #使用当前日期作为命名格式
 daily        #每天进行轮替切割
+notifempty   #当日志文件为空时,不进行轮转
