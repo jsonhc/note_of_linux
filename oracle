@@ -1,0 +1,3 @@
+oracle中查询表中先排序再取出前10条数据:
+select * from (select * from tablename order by columnname desc) where rownum<=10;
+
