@@ -1,0 +1,3 @@
+以cpu为排序找出占用cpu率高的线程:
+~$ ps H -eo user,pid,ppid,tid,time,%cpu,cmd --sort=%cpu
+
