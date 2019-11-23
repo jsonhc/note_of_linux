@@ -6,3 +6,9 @@ wadeson@wadeson-Inspiron-7460:/tmp$ date -d "Sat Nov 23 15:39:15 2019" +"%Y%m%d 
 20191123 15:39:15
 wadeson@wadeson-Inspiron-7460:/tmp$ date -d "Sat Nov 23 15:39:15 2019" +"%Y%m%d"
 20191123
+
+wadeson@wadeson-Inspiron-7460:/tmp$ process_time=`ps -eo pid,lstart|grep 16894|awk '{$1="";print $0}'`
+wadeson@wadeson-Inspiron-7460:/tmp$ echo ${process_time}
+Sat Nov 23 16:39:52 2019
+wadeson@wadeson-Inspiron-7460:/tmp$ date -d "${process_time}" +"%Y%m%d"
+20191123
