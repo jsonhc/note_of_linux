@@ -1,0 +1,8 @@
+获取进程启动时间:
+wadeson@wadeson-Inspiron-7460:/tmp$ ps -eo pid,lstart|grep 15849      # pid:15849
+15849 Sat Nov 23 15:39:15 2019
+将上面输出的格式进行date转换
+wadeson@wadeson-Inspiron-7460:/tmp$ date -d "Sat Nov 23 15:39:15 2019" +"%Y%m%d %H:%M:%S"
+20191123 15:39:15
+wadeson@wadeson-Inspiron-7460:/tmp$ date -d "Sat Nov 23 15:39:15 2019" +"%Y%m%d"
+20191123
