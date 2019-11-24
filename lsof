@@ -1,0 +1,13 @@
+wadeson@wadeson-Inspiron-7460:~$ sudo lsof -i|grep 8307
+vmware-ho  2154            root   18u  IPv4   36212      0t0  TCP localhost:8307 (LISTEN)
+
+wadeson@wadeson-Inspiron-7460:~$ sudo lsof -i|grep -i delete
+
+wadeson@wadeson-Inspiron-7460:~$ sudo lsof -i@192.168.1.106
+COMMAND     PID    USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
+teamviewe 20599    root   14u  IPv4 6652606      0t0  TCP wadeson-Inspiron-7460:54996->IN-MUM-ANX-R001.teamviewer.com:https (ESTABLISHED)
+chrome    29887 wadeson  115u  IPv4 6648340      0t0  TCP wadeson-Inspiron-7460:44446->tl-in-f188.1e100.net:5228 (ESTABLISHED)
+chrome    29887 wadeson  128u  IPv4 6654520      0t0  TCP wadeson-Inspiron-7460:46552->tsa03s06-in-f14.1e100.net:https (SYN_SENT)
+chrome    29887 wadeson  129u  IPv4 6652926      0t0  TCP wadeson-Inspiron-7460:46492->tsa03s06-in-f14.1e100.net:https (SYN_SENT)
+
+wadeson@wadeson-Inspiron-7460:~$ sudo lsof -c chrome|head -10       # lsof -c command
