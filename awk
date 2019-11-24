@@ -15,3 +15,10 @@ wadeson@wadeson-Inspiron-7460:~$ awk 'BEGIN{for(i=1;i<=9;i++){for(j=9;j>=i;j--)p
 8*9= 72	8*8= 64	
 9*9= 81
 
+wadeson@wadeson-Inspiron-7460:~$ sudo netstat -atn | awk '/^tcp/{++S[$NF]}END{for(a in S)print a,S[a]}'
+LISTEN 12
+CLOSE_WAIT 3
+TIME_WAIT 1
+ESTABLISHED 23
+LAST_ACK 1
+SYN_SENT 13
