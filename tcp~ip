@@ -13,6 +13,8 @@ CLOSE_WAIT状态不会自己消失,除非对应的应用进程死掉,不会消�
   BACKLOG 太大：此处的 backlog 不是 syn backlog，而是 accept 的 backlog，如果 backlog 太大的话，设想突然遭遇大访问量的话，
 即便响应速度不慢，也可能出现来不及消费的情况，导致多余的请求还在队列里就被对方关闭了。
 
+CLOSE_WAIT的情况需要从程序本身出发，而TIME_WAIT更倾向于修改系统参数
+
 第一次握手：建立连接时,客户端发送syn包(syn=j)到服务器,并进入SYN_SEND状态,等待服务器确认； 
 SYN：同步序列编号(Synchronize Sequence Numbers)
 第二次握手：服务器收到syn包,必须确认客户的SYN（ack=j+1）,同时自己也发送一个SYN包（syn=k）,即SYN+ACK包,此时服务器进入SYN_RECV状态； 
@@ -40,6 +42,15 @@ FIN_WAIT_2 socket连接关闭后，等待来自远程计算器的关闭信号。
 TIME_WAIT 连接关闭后，等待远程计算器关闭重发。
 TIME_WAIT 表示主动关闭
 CLOSE_WAIT 表示被动关闭
+
+wadeson@wadeson-Inspiron-7460:~$ sudo netstat -atn | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
+CLOSE_WAIT 1
+ESTABLISHED 12
+LAST_ACK 1
+SYN_SENT 6
+FIN_WAIT1 1
+wadeson@wadeson-Inspiron-7460:~$ sudo netstat -ant | awk '{if($NF=="CLOSE_WAIT"){S[$5]++}}END{for(i in S) print i,S[i]}'
+120.92.218.109:443 1
 
 TCP四次挥手
 Client: 服务端大哥，我事情都干完了，准备撤了，这里对应的就是客户端发了一个FIN
