@@ -1,0 +1,28 @@
+https://mrdear.cn/2018/05/03/%E8%BF%90%E7%BB%B4/linux-tcp_close_wait/
+
+大量CLOSE_WAIT有什么危害?
+CLOSE_WAIT状态不会自己消失,除非对应的应用进程死掉,不会消失就意味着一直占用服务器资源,端口总数又只有65535,
+因此这里的服务器作为连接的发起者就会造成大量端口被占用,一旦占用完就导致后面的请求都发不出去,
+也就是一开始图上另一个项目发请求出现的Address already in use (Bind failed)错误.
+
+被动方什么情况下FIN包会发送失败?
+  程序问题：如果代码层面忘记了 close 相应的 socket 连接，那么自然不会发出 FIN 包，从而导致 CLOSE_WAIT 累积；或者代码不严谨，
+出现死循环之类的问题，导致即便后面写了 close 也永远执行不到。
+  响应太慢或者超时设置过小：如果连接双方不和谐，一方不耐烦直接 timeout，另一方却还在忙于耗时逻辑，就会导致 close 被延后。
+响应太慢是首要问题，不过换个角度看，也可能是 timeout 设置过小。
+  BACKLOG 太大：此处的 backlog 不是 syn backlog，而是 accept 的 backlog，如果 backlog 太大的话，设想突然遭遇大访问量的话，
+即便响应速度不慢，也可能出现来不及消费的情况，导致多余的请求还在队列里就被对方关闭了。
+
+第一次握手：建立连接时,客户端发送syn包(syn=j)到服务器,并进入SYN_SEND状态,等待服务器确认； 
+SYN：同步序列编号(Synchronize Sequence Numbers)
+第二次握手：服务器收到syn包,必须确认客户的SYN（ack=j+1）,同时自己也发送一个SYN包（syn=k）,即SYN+ACK包,此时服务器进入SYN_RECV状态； 
+第三次握手：客户端收到服务器的SYN＋ACK包,向服务器发送确认包ACK(ack=k+1),此包发送完毕,客户端和服务器进入ESTABLISHED状态,完成三次握手.
+完成三次握手,客户端与服务器开始传送数据
+
+SYN攻击：
+  在三次握手过程中，Server发送SYN-ACK之后，收到Client的ACK之前的TCP连接称为半连接（half-open connect），此时Server处于SYN_RCVD状态，
+当收到ACK后，Server转入ESTABLISHED状态。SYN攻击就是Client在短时间内伪造大量不存在的IP地址，并向Server不断地发送SYN包，Server回复确认包，
+并等待Client的确认，由于源地址是不存在的，因此，Server需要不断重发直至超时，这些伪造的SYN包将产时间占用未连接队列，导致正常的SYN请求因为队列满而被丢弃
+，从而引起网络堵塞甚至系统瘫痪。SYN攻击时一种典型的DDOS攻击，检测SYN攻击的方式非常简单，即当Server上有大量半连接状态且源IP地址是随机的，则可以断定遭到
+SYN攻击了，使用如下命令可以让之现行：
+  #netstat -nap | grep SYN_RECV
