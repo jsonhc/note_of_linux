@@ -38,3 +38,7 @@ l:多线程.克隆线程
 通过strace -p 线程id  得到这个线程的所以系统调用
 通过jstack pid|grep -A 10 num 查看堆栈信息
   其中num为进程对应的线程的16进制表示,比如pid为6620,线程id为21233(通过printf打印出16进制的表示就是num这个变量的值)
+
+# 查看某一个进程所打开的文件个数
+# ps -ef|grep    获得服务的进程id，pid
+# lsof -p pid|wc -l   通过pid来查询打开的文件数
