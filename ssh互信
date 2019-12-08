@@ -52,6 +52,7 @@ fi
 
 name=$1
 export cmd="mkdir -p /root/.ssh"
+password="123456"
 
 /usr/bin/expect << EOF
 set timeout 2000
@@ -59,7 +60,7 @@ set cmd "$env(cmd)"
 spawn ssh root@$name $cmd
 expect {
 "*(yes/no)*" {send "yes\r\n";exp_continue} 
-"*password*" {send "123456\r\n";exp_continue}
+"*password*" {send "$password\r\n";exp_continue}
 eof
 }
 EOF
