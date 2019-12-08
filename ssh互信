@@ -1,0 +1,71 @@
+示例1:node2需要ssh到node3
+[root@node2 ~]# cat ssh_huxin.sh 
+#!/bin/bash
+
+# node2
+if [ -d "~/.ssh" ];then
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' >/dev/null 2>&1
+    cat ~/.ssh/id_rsa.pub
+else
+    mkdir ~/.ssh
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' >/dev/null 2>&1
+    cat ~/.ssh/id_rsa.pub
+fi
+[root@node2 ~]# sh ssh_huxin.sh 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq3h/DoIu/WwB6kPSouqzG8zQaee9aMxekumwGgGdrgoKNrcmIEKJwInsjJms1etAnkTwIor5JFTjI7iRdf/bUP557hEzLhnshvCmJslViuxNc/xALNBQkF1Efp98d405YjLxSWek2VPHTKBs7+e7kd6b13eBR43SVqbtlaDx1g6nwrYjW20qaedK6eolUR+NMFDNEPC4zro83cl3QOnTx/feOxZiAHarNLKHS9iRko1r34/eThWzdgmUaHUfxcm/3zj3I+5dfds/6oJmPscbY6RSFJawtkmdC5MRtI8x+ImISxUOTr3wluMYItRq/JAXNngVLje4WUvDMNU6M0Qf/ root@node2
+然后将上述公钥追加到node3中:
+[root@node3 ~]# cat get_huxin.sh 
+#!/bin/bash
+
+# node3
+id_pub=$1
+if [ -d "~/.ssh" ];then
+    echo ${id_pub} >> ~/.ssh/authorized_keys
+else
+    mkdir ~/.ssh
+    echo ${id_pub} >> ~/.ssh/authorized_keys
+fi
+# sh get_huxin.sh "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq3h/DoIu/WwB6kPSouqzG8zQaee9aMxekumwGgGdrgoKNrcmIEKJwInsjJms1etAnkTwIor5JFTjI7iRdf/bUP557hEzLhnshvCmJslViuxNc/xALNBQkF1Efp98d405YjLxSWek2VPHTKBs7+e7kd6b13eBR43SVqbtlaDx1g6nwrYjW20qaedK6eolUR+NMFDNEPC4zro83cl3QOnTx/feOxZiAHarNLKHS9iRko1r34/eThWzdgmUaHUfxcm/3zj3I+5dfds/6oJmPscbY6RSFJawtkmdC5MRtI8x+ImISxUOTr3wluMYItRq/JAXNngVLje4WUvDMNU6M0Qf/ root@node2"
+然后回到node2:
+[root@node2 ~]# ssh node3                # 这里出错是因为两者没有主机名解析
+ssh: Could not resolve hostname node3: Name or service not known
+[root@node2 ~]# ssh 172.16.23.123
+The authenticity of host '172.16.23.123 (172.16.23.123)' can't be established.
+ECDSA key fingerprint is SHA256:KK4baIL1TIWjlSi0nR2vBQzhP3GUjMMajtwSru5PGH0.
+ECDSA key fingerprint is MD5:6b:75:0e:4a:17:74:97:66:7c:d1:d8:e4:dc:5f:c5:fc.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.16.23.123' (ECDSA) to the list of known hosts.
+Last login: Sun Dec  8 00:57:52 2019 from master
+[root@node3 ~]# 
+
+示例2:master需要ssh到node1,但是不在node1上面操作,知道node1的密码(确保node1上面有.ssh目录)
+[root@master ~]# cat ssh_host 
+#!/bin/bash
+
+if [ "~/.ssh/id_rsa" ];then
+    rm -f ~/.ssh/id_rsa
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' >/dev/null 2>&1
+    cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+else
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' >/dev/null 2>&1
+fi
+
+
+/usr/bin/expect << EOF
+set timeout 2000
+spawn scp /root/.ssh/id_rsa.pub root@node1:/root/.ssh/authorized_keys
+expect {
+"*(yes/no)*" {send "yes\r\n";exp_continue} 
+"*password*" {send "123456\r\n";exp_continue}
+}
+EOF
+[root@master ~]# ./ssh_host 
+spawn scp /root/.ssh/id_rsa.pub root@node1:/root/.ssh/authorized_keys
+root@node1's password: 
+id_rsa.pub                                                                                                                       100%  393   479.6KB/s   00:00
+[root@master ~]# ssh root@node1
+Last login: Sun Oct 14 10:35:18 2018 from master
+[root@node1 ~]# exit
+登出
+Connection to node1 closed.
+
