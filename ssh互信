@@ -38,7 +38,7 @@ Warning: Permanently added '172.16.23.123' (ECDSA) to the list of known hosts.
 Last login: Sun Dec  8 00:57:52 2019 from master
 [root@node3 ~]# 
 
-示例2:master需要ssh到node1,但是不在node1上面操作,知道node1的密码(确保node1上面有.ssh目录)
+示例2:master需要ssh到node1,但是不在node1上面操作,知道node1的密码
 [root@master ~]# cat ssh_host 
 #!/bin/bash
 
@@ -50,19 +50,60 @@ else
     ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' >/dev/null 2>&1
 fi
 
+name=$1
+export cmd="mkdir -p /root/.ssh"
 
 /usr/bin/expect << EOF
 set timeout 2000
-spawn scp /root/.ssh/id_rsa.pub root@node1:/root/.ssh/authorized_keys
+set cmd "$env(cmd)"
+spawn ssh root@$name $cmd
+expect {
+"*(yes/no)*" {send "yes\r\n";exp_continue} 
+"*password*" {send "123456\r\n";exp_continue}
+eof
+}
+EOF
+
+/usr/bin/expect << EOF
+set timeout 2000
+spawn scp /root/.ssh/id_rsa.pub root@$name:/root/.ssh/authorized_keys
 expect {
 "*(yes/no)*" {send "yes\r\n";exp_continue} 
 "*password*" {send "123456\r\n";exp_continue}
 }
 EOF
-[root@master ~]# ./ssh_host 
+
+[root@master ~]# ./ssh_host node1
+spawn ssh root@node1 mkdir -p /root/.ssh
+root@node1's password: 
 spawn scp /root/.ssh/id_rsa.pub root@node1:/root/.ssh/authorized_keys
 root@node1's password: 
-id_rsa.pub                                                                                                                       100%  393   479.6KB/s   00:00
+id_rsa.pub   100%  393   479.6KB/s   00:00
+[root@master ~]# ./ssh_host node2
+spawn ssh root@node2 mkdir -p /root/.ssh
+The authenticity of host 'node2 (172.16.23.122)' can't be established.
+ECDSA key fingerprint is SHA256:MZ/oPdzwTPYWh1lnl7DgJ9sKFnnssyRC0r76pcQI3UE.
+ECDSA key fingerprint is MD5:8d:05:38:4d:ef:91:25:17:8e:4b:b7:28:a3:69:15:54.
+Are you sure you want to continue connecting (yes/no)? yes
+
+Warning: Permanently added 'node2,172.16.23.122' (ECDSA) to the list of known hosts.
+root@node2's password: 
+spawn scp /root/.ssh/id_rsa.pub root@node2:/root/.ssh/authorized_keys
+root@node2's password: 
+id_rsa.pub                                                                                                                       100%  393   276.4KB/s   00:00    
+[root@master ~]# ./ssh_host node3
+spawn ssh root@node3 mkdir -p /root/.ssh
+The authenticity of host 'node3 (172.16.23.123)' can't be established.
+ECDSA key fingerprint is SHA256:KK4baIL1TIWjlSi0nR2vBQzhP3GUjMMajtwSru5PGH0.
+ECDSA key fingerprint is MD5:6b:75:0e:4a:17:74:97:66:7c:d1:d8:e4:dc:5f:c5:fc.
+Are you sure you want to continue connecting (yes/no)? yes
+
+Warning: Permanently added 'node3,172.16.23.123' (ECDSA) to the list of known hosts.
+root@node3's password: 
+spawn scp /root/.ssh/id_rsa.pub root@node3:/root/.ssh/authorized_keys
+root@node3's password: 
+id_rsa.pub                                                                                                                       100%  393   223.2KB/s   00:00    
+
 [root@master ~]# ssh root@node1
 Last login: Sun Oct 14 10:35:18 2018 from master
 [root@node1 ~]# exit
