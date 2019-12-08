@@ -69,3 +69,14 @@ Last login: Sun Oct 14 10:35:18 2018 from master
 登出
 Connection to node1 closed.
 
+或者
+[root@master ~]# cat ssh_expect 
+#!/usr/bin/expect
+
+set timeout 2000
+spawn scp /root/.ssh/authorized_keys root@node1:/root/.ssh/
+expect {
+"*(yes/no)*" {send "yes\r\n";exp_continue} 
+"*password*" {send "123456\r\n";exp_continue}
+}
+
