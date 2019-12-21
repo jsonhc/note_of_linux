@@ -1,0 +1,6 @@
+# ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# ls -l /etc/localtime
+lrwxrwxrwx. 1 root root 33 Apr 17 14:19 /etc/localtime -> /usr/share/zoneinfo/Asia/Shanghai
+
+# date
+Tue Apr 17 14:19:49 CST 2018
