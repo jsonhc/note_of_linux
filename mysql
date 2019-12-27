@@ -1,0 +1,58 @@
+mysql> show databases; 
+mysql> create database test;
+mysql> use test;
+mysql> show tables;
+mysql> create table ip_appid(ip varchar(255),appid varchar(50),appid_use char(20) default True);
+mysql> desc ip_appid;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| ip        | varchar(255) | YES  |     | NULL    |       |
+| appid     | varchar(50)  | YES  |     | NULL    |       |
+| appid_use | char(20)     | YES  |     | 1       |       |
++-----------+--------------+------+-----+---------+-------+
+mysql> insert into ip_appid values('172.16.23.120','20000',1);
+mysql> select * from ip_appid;
++---------------+-------+-----------+
+| ip            | appid | appid_use |
++---------------+-------+-----------+
+| 172.16.23.120 | 20000 | 1         |
+| 172.16.23.121 | 20000 | 1         |
+| 172.16.23.122 | 20001 | 1         |
+| 172.16.23.123 | 20001 | 1         |
++---------------+-------+-----------+
+mysql> create table appid_owner(appid varchar(50),roletype char(50));
+Query OK, 0 rows affected (0.05 sec)
+mysql> desc appid_owner;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| appid    | varchar(50) | YES  |     | NULL    |       |
+| roletype | char(50)    | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+mysql> insert into appid_owner values ('20001','json');
+mysql> select * from appid_owner;
++-------+----------+
+| appid | roletype |
++-------+----------+
+| 20000 | wadeson  |
+| 20001 | json     |
++-------+----------+
+mysql> select ip.ip,ip.appid,ip.appid_use from ip_appid ip,appid_owner a where ip.appid=a.appid;
++---------------+-------+-----------+
+| ip            | appid | appid_use |
++---------------+-------+-----------+
+| 172.16.23.120 | 20000 | 1         |
+| 172.16.23.121 | 20000 | 1         |
+| 172.16.23.122 | 20001 | 1         |
+| 172.16.23.123 | 20001 | 1         |
++---------------+-------+-----------+
+mysql> select * from ip_appid ip left join appid_owner a on ip.appid=a.appid;
++---------------+-------+-----------+-------+----------+
+| ip            | appid | appid_use | appid | roletype |
++---------------+-------+-----------+-------+----------+
+| 172.16.23.120 | 20000 | 1         | 20000 | wadeson  |
+| 172.16.23.121 | 20000 | 1         | 20000 | wadeson  |
+| 172.16.23.122 | 20001 | 1         | 20001 | json     |
+| 172.16.23.123 | 20001 | 1         | 20001 | json     |
++---------------+-------+-----------+-------+----------+
