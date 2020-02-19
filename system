@@ -42,3 +42,7 @@ l:多线程.克隆线程
 # 查看某一个进程所打开的文件个数
 # ps -ef|grep    获得服务的进程id，pid
 # lsof -p pid|wc -l   通过pid来查询打开的文件数
+
+# 查看某一个进程打开的进程数
+# ps -ef|grep    获得服务的进程pid
+# cd /proc/pid/task && ls |wc -l
