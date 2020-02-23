@@ -1,0 +1,20 @@
+更换 Python 的第三方仓库源
+树莓派 Raspbian、Hassbian、Mossbian: /etc/pip.conf
+Linux： ~/.pip/pip.conf
+Windows 10： %APPDATA%\pip\pip.ini
+macOS：$HOME/Library/Application Support/pip/pip.conf
+
+如果服务器没有配置pip源,则做如下操作:
+cd ~/.pip
+vim pip.conf
+[global]
+trusted-host=mirrors.aliyun.com
+index-url=https://mirrors.aliyun.com/pypi/simple/
+
+国内镜像地址：
+清华：https://mirrors.tuna.tsinghua.edu.cn/
+阿里：https://opsx.alibaba.com/mirror
+参考：https://home-assistant.cc/cn/source/
+
+pip删除缓存 安装操作：
+pip --no-cache-dir install  包名
