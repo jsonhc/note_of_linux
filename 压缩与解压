@@ -33,3 +33,11 @@ wadeson@wadeson-Inspiron-7460:/tmp$ ll cpu_use*
 -rw-r--r-- 1 wadeson wadeson 15640 11月 15 19:54 cpu_use
 -rw-r--r-- 1 wadeson wadeson  3321 11月 15 20:11 cpu_use.tar.gz
 
+# 按照4000M大小进行压缩文件
+split -b 4000M -d -a 1 cm-11.tar.gz cm-11.tar.gz.
+# 压缩后展示:
+-rw-r--r--  1 root     root      4194304000 May 20 14:00 cm-11.tar.gz.0
+-rw-r--r--  1 root     root      4194304000 May 20 14:02 cm-11.tar.gz.1
+
+# 解压缩
+cat cm-11.tar.gz.* | tar -zxv
