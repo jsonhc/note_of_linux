@@ -1,10 +1,17 @@
 #!/bin/bash
 
+yum install –y wget > /dev/null 2>&1
+cd /etc/yum.repos.d/ && mv CentOS-Base.repo CentOS-Base.repo_bak
+wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo > /dev/null 2>&1
+wget -O /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo > /dev/null 2>&1
+yum clean all > /dev/null 2>&1
+yum makecache > /dev/null 2>&1
+
 # install basic package
 echo "start to install basic package:vim wget net-tools tree lrzsz ntpdate lsof lftp"
-yum install vim wget net-tools tree lrzsz ntpdate lsof lftp -y > /dev/null 2>&1
+yum install vim net-tools tree lrzsz ntpdate lsof lftp -y > /dev/null 2>&1
 
-basic_package=("vim" "wget" "net-tools" "tree" "lrzsz" "ntpdate" "lsof" "lftp")
+basic_package=("vim" "net-tools" "tree" "lrzsz" "ntpdate" "lsof" "lftp")
 
 for i in ${basic_package[*]};
 do
