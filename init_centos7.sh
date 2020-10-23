@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum install –y wget > /dev/null 2>&1
+yum install wget -y > /dev/null 2>&1
 cd /etc/yum.repos.d/ && mv CentOS-Base.repo CentOS-Base.repo_bak
 wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo > /dev/null 2>&1
 wget -O /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo > /dev/null 2>&1
