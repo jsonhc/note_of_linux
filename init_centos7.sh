@@ -126,6 +126,10 @@ fi
 # close selinux
 setenforce 0 > /dev/null 2>&1 && sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/sysconfig/selinux && echo "selinux is close" || echo "selinux is open,please check"
 
+# ntpdate time server
+cd /var/spool/cron/
+echo "*/1 * * * * /usr/sbin/ntpdate ntp1.aliyun.com > /dev/null" >> root
+
 # modify hostname
 name=$1
 hostnamectl set-hostname $name && echo $name >> /etc/sysconfig/network && echo "hostname is $name" || echo "modify hostname failed,please check"
